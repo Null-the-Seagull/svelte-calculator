@@ -1,7 +1,7 @@
 <script>
 	let title = 'Svelte Calculator'
 
-	let result_display
+	let result_display = ' '
 
 	function handleClick(e) {
 		result_display = e.target.value
