@@ -46,6 +46,10 @@ var app = (function () {
     function space() {
         return text(' ');
     }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
@@ -275,6 +279,19 @@ var app = (function () {
         dispatch_dev('SvelteDOMRemove', { node });
         detach(node);
     }
+    function listen_dev(node, event, handler, options, has_prevent_default, has_stop_propagation) {
+        const modifiers = options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+        if (has_prevent_default)
+            modifiers.push('preventDefault');
+        if (has_stop_propagation)
+            modifiers.push('stopPropagation');
+        dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+        const dispose = listen(node, event, handler, options);
+        return () => {
+            dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+            dispose();
+        };
+    }
     function attr_dev(node, attribute, value) {
         attr(node, attribute, value);
         if (value == null)
@@ -282,12 +299,9 @@ var app = (function () {
         else
             dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
     }
-    function set_data_dev(text, data) {
-        data = '' + data;
-        if (text.wholeText === data)
-            return;
-        dispatch_dev('SvelteDOMSetData', { node: text, data });
-        text.data = data;
+    function prop_dev(node, property, value) {
+        node[property] = value;
+        dispatch_dev('SvelteDOMSetProperty', { node, property, value });
     }
     function validate_slots(name, slot, keys) {
         for (const slot_key of Object.keys(slot)) {
@@ -323,35 +337,146 @@ var app = (function () {
     function create_fragment(ctx) {
     	let main;
     	let h1;
-    	let t0;
     	let t1;
+    	let hr;
     	let t2;
+    	let input;
+    	let br;
     	let t3;
-    	let p;
-    	let t4;
-    	let a;
-    	let t6;
+    	let table;
+    	let tr0;
+    	let td0;
+    	let button0;
+    	let t5;
+    	let td1;
+    	let button1;
+    	let t7;
+    	let td2;
+    	let button2;
+    	let t9;
+    	let tr1;
+    	let td3;
+    	let button3;
+    	let t11;
+    	let td4;
+    	let button4;
+    	let t13;
+    	let td5;
+    	let button5;
+    	let t15;
+    	let tr2;
+    	let td6;
+    	let button6;
+    	let t17;
+    	let td7;
+    	let button7;
+    	let t19;
+    	let td8;
+    	let button8;
+    	let mounted;
+    	let dispose;
 
     	const block = {
     		c: function create() {
     			main = element("main");
     			h1 = element("h1");
-    			t0 = text("Hello ");
-    			t1 = text(/*name*/ ctx[0]);
-    			t2 = text("!");
+    			h1.textContent = `${/*title*/ ctx[1]}`;
+    			t1 = space();
+    			hr = element("hr");
+    			t2 = space();
+    			input = element("input");
+    			br = element("br");
     			t3 = space();
-    			p = element("p");
-    			t4 = text("Visit the ");
-    			a = element("a");
-    			a.textContent = "Svelte tutorial";
-    			t6 = text(" to learn how to build Svelte apps.");
-    			attr_dev(h1, "class", "svelte-1tky8bj");
-    			add_location(h1, file, 5, 1, 46);
-    			attr_dev(a, "href", "https://svelte.dev/tutorial");
-    			add_location(a, file, 6, 14, 83);
-    			add_location(p, file, 6, 1, 70);
-    			attr_dev(main, "class", "svelte-1tky8bj");
-    			add_location(main, file, 4, 0, 38);
+    			table = element("table");
+    			tr0 = element("tr");
+    			td0 = element("td");
+    			button0 = element("button");
+    			button0.textContent = "7";
+    			t5 = space();
+    			td1 = element("td");
+    			button1 = element("button");
+    			button1.textContent = "8";
+    			t7 = space();
+    			td2 = element("td");
+    			button2 = element("button");
+    			button2.textContent = "9";
+    			t9 = space();
+    			tr1 = element("tr");
+    			td3 = element("td");
+    			button3 = element("button");
+    			button3.textContent = "4";
+    			t11 = space();
+    			td4 = element("td");
+    			button4 = element("button");
+    			button4.textContent = "5";
+    			t13 = space();
+    			td5 = element("td");
+    			button5 = element("button");
+    			button5.textContent = "6";
+    			t15 = space();
+    			tr2 = element("tr");
+    			td6 = element("td");
+    			button6 = element("button");
+    			button6.textContent = "1";
+    			t17 = space();
+    			td7 = element("td");
+    			button7 = element("button");
+    			button7.textContent = "2";
+    			t19 = space();
+    			td8 = element("td");
+    			button8 = element("button");
+    			button8.textContent = "3";
+    			attr_dev(h1, "class", "svelte-15qukjs");
+    			add_location(h1, file, 11, 1, 158);
+    			add_location(hr, file, 12, 1, 177);
+    			attr_dev(input, "id", "inp_display");
+    			attr_dev(input, "type", "text");
+    			input.value = /*result_display*/ ctx[0];
+    			input.readOnly = true;
+    			add_location(input, file, 13, 1, 184);
+    			add_location(br, file, 13, 69, 252);
+    			button0.value = "7";
+    			attr_dev(button0, "class", "svelte-15qukjs");
+    			add_location(button0, file, 17, 4, 289);
+    			add_location(td0, file, 16, 3, 279);
+    			button1.value = "8";
+    			attr_dev(button1, "class", "svelte-15qukjs");
+    			add_location(button1, file, 20, 4, 366);
+    			add_location(td1, file, 19, 3, 356);
+    			button2.value = "9";
+    			attr_dev(button2, "class", "svelte-15qukjs");
+    			add_location(button2, file, 23, 4, 442);
+    			add_location(td2, file, 22, 3, 432);
+    			add_location(tr0, file, 15, 2, 270);
+    			button3.value = "4";
+    			attr_dev(button3, "class", "svelte-15qukjs");
+    			add_location(button3, file, 28, 4, 535);
+    			add_location(td3, file, 27, 3, 525);
+    			button4.value = "5";
+    			attr_dev(button4, "class", "svelte-15qukjs");
+    			add_location(button4, file, 31, 4, 612);
+    			add_location(td4, file, 30, 3, 602);
+    			button5.value = "6";
+    			attr_dev(button5, "class", "svelte-15qukjs");
+    			add_location(button5, file, 34, 4, 691);
+    			add_location(td5, file, 33, 3, 681);
+    			add_location(tr1, file, 26, 2, 516);
+    			button6.value = "1";
+    			attr_dev(button6, "class", "svelte-15qukjs");
+    			add_location(button6, file, 39, 4, 787);
+    			add_location(td6, file, 38, 3, 777);
+    			button7.value = "2";
+    			attr_dev(button7, "class", "svelte-15qukjs");
+    			add_location(button7, file, 42, 4, 864);
+    			add_location(td7, file, 41, 3, 854);
+    			button8.value = "3";
+    			attr_dev(button8, "class", "svelte-15qukjs");
+    			add_location(button8, file, 45, 4, 940);
+    			add_location(td8, file, 44, 3, 930);
+    			add_location(tr2, file, 37, 2, 768);
+    			add_location(table, file, 14, 1, 259);
+    			attr_dev(main, "class", "svelte-15qukjs");
+    			add_location(main, file, 10, 0, 149);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -359,22 +484,70 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert_dev(target, main, anchor);
     			append_dev(main, h1);
-    			append_dev(h1, t0);
-    			append_dev(h1, t1);
-    			append_dev(h1, t2);
+    			append_dev(main, t1);
+    			append_dev(main, hr);
+    			append_dev(main, t2);
+    			append_dev(main, input);
+    			append_dev(main, br);
     			append_dev(main, t3);
-    			append_dev(main, p);
-    			append_dev(p, t4);
-    			append_dev(p, a);
-    			append_dev(p, t6);
+    			append_dev(main, table);
+    			append_dev(table, tr0);
+    			append_dev(tr0, td0);
+    			append_dev(td0, button0);
+    			append_dev(tr0, t5);
+    			append_dev(tr0, td1);
+    			append_dev(td1, button1);
+    			append_dev(tr0, t7);
+    			append_dev(tr0, td2);
+    			append_dev(td2, button2);
+    			append_dev(table, t9);
+    			append_dev(table, tr1);
+    			append_dev(tr1, td3);
+    			append_dev(td3, button3);
+    			append_dev(tr1, t11);
+    			append_dev(tr1, td4);
+    			append_dev(td4, button4);
+    			append_dev(tr1, t13);
+    			append_dev(tr1, td5);
+    			append_dev(td5, button5);
+    			append_dev(table, t15);
+    			append_dev(table, tr2);
+    			append_dev(tr2, td6);
+    			append_dev(td6, button6);
+    			append_dev(tr2, t17);
+    			append_dev(tr2, td7);
+    			append_dev(td7, button7);
+    			append_dev(tr2, t19);
+    			append_dev(tr2, td8);
+    			append_dev(td8, button8);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(button0, "click", /*handleClick*/ ctx[2], false, false, false),
+    					listen_dev(button1, "click", /*handleClick*/ ctx[2], false, false, false),
+    					listen_dev(button2, "click", /*handleClick*/ ctx[2], false, false, false),
+    					listen_dev(button3, "click", /*handleClick*/ ctx[2], false, false, false),
+    					listen_dev(button4, "click", /*handleClick*/ ctx[2], false, false, false),
+    					listen_dev(button5, "click", /*handleClick*/ ctx[2], false, false, false),
+    					listen_dev(button6, "click", /*handleClick*/ ctx[2], false, false, false),
+    					listen_dev(button7, "click", /*handleClick*/ ctx[2], false, false, false),
+    					listen_dev(button8, "click", /*handleClick*/ ctx[2], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*name*/ 1) set_data_dev(t1, /*name*/ ctx[0]);
+    			if (dirty & /*result_display*/ 1 && input.value !== /*result_display*/ ctx[0]) {
+    				prop_dev(input, "value", /*result_display*/ ctx[0]);
+    			}
     		},
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(main);
+    			mounted = false;
+    			run_all(dispose);
     		}
     	};
 
@@ -392,34 +565,37 @@ var app = (function () {
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("App", slots, []);
-    	let { name } = $$props;
-    	const writable_props = ["name"];
+    	let title = "Svelte Calculator";
+    	let result_display;
+
+    	function handleClick(e) {
+    		$$invalidate(0, result_display = e.target.value);
+    	}
+
+    	const writable_props = [];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<App> was created with unknown prop '${key}'`);
     	});
 
-    	$$self.$$set = $$props => {
-    		if ("name" in $$props) $$invalidate(0, name = $$props.name);
-    	};
-
-    	$$self.$capture_state = () => ({ name });
+    	$$self.$capture_state = () => ({ title, result_display, handleClick });
 
     	$$self.$inject_state = $$props => {
-    		if ("name" in $$props) $$invalidate(0, name = $$props.name);
+    		if ("title" in $$props) $$invalidate(1, title = $$props.title);
+    		if ("result_display" in $$props) $$invalidate(0, result_display = $$props.result_display);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [name];
+    	return [result_display, title, handleClick];
     }
 
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, { name: 0 });
+    		init(this, options, instance, create_fragment, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -427,28 +603,13 @@ var app = (function () {
     			options,
     			id: create_fragment.name
     		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-
-    		if (/*name*/ ctx[0] === undefined && !("name" in props)) {
-    			console.warn("<App> was created without expected prop 'name'");
-    		}
-    	}
-
-    	get name() {
-    		throw new Error("<App>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set name(value) {
-    		throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
     const app = new App({
     	target: document.body,
     	props: {
-    		name: 'loser'
+    		name: 'pepega'
     	}
     });
 

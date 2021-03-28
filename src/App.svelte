@@ -1,14 +1,52 @@
 <script>
-	export let name;
 	let title = 'Svelte Calculator'
+
+	let result_display
+
+	function handleClick(e) {
+		result_display = e.target.value
+	}
 </script>
 
 <main>
 	<h1>{title}</h1>
-
-
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<hr>
+	<input id='inp_display' type='text' value={result_display} readonly><br>
+	<table>
+		<tr>
+			<td>
+				<button value=7 on:click={handleClick}> 7 </button>
+			</td>	
+			<td>
+				<button value=8 on:click={handleClick}> 8 </button>
+			</td>
+			<td>
+				<button value=9 on:click={handleClick}> 9 </button>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<button value=4 on:click={handleClick}> 4 </button>
+			</td>	
+			<td>
+				<button value=5 on:click={handleClick}> 5 </button>			
+			</td>
+			<td>
+				<button value=6 on:click={handleClick}> 6 </button>			
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<button value=1 on:click={handleClick}> 1 </button>
+			</td>	
+			<td>
+				<button value=2 on:click={handleClick}> 2 </button>
+			</td>
+			<td>
+				<button value=3 on:click={handleClick}> 3 </button>
+			</td>
+		</tr>
+	</table>
 </main>
 
 <style>
@@ -30,5 +68,11 @@
 		main {
 			max-width: none;
 		}
+	}
+
+	button {
+		color: #580600;
+		padding: 32px 32px;
+		text-align: center;
 	}
 </style>
